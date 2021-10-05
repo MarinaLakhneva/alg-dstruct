@@ -4,24 +4,24 @@
 #include <string.h>
 
 typedef struct list {
-    char* value;
+    const char* value;
     struct list* next;
 } list;
 
-list* create(char* word) {
+list* create(const char* word) {
     list* tmp = (list*)malloc(sizeof(list));
     if (tmp == NULL) {
-        +printf("No memory allocated!"); 
+        printf("No memory allocated!"); 
     }
             tmp->value = word;
             tmp->next = NULL;
             return(tmp);
 }
 
-list* append(char* word, list* head) {
+list* append(const char* word, list* head) {
     list* tmp = (list*)malloc(sizeof(list));
     if (tmp == NULL) {
-        +printf("No memory allocated!");
+        printf("No memory allocated!");
     }
             tmp->value = word;
             tmp->next = head;
@@ -41,11 +41,11 @@ void sort(list* fin) {
     list* finish = fin;
 
     while (fin->next != NULL) {
-        char* value1 = fin->value;
-        char* value2 = fin->next->value;
+        const char* value1 = fin->value;
+        const char* value2 = fin->next->value;
 
         if (strcmp(value2, value1) < 0) {
-            char* temp = fin->value;
+            const char* temp = fin->value;
             fin->value = fin->next->value;
             fin->next->value = temp;
             swap_counter = swap_counter + 1;

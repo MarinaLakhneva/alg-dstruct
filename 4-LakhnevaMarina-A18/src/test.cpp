@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "lab_1.h"
 
-
+// проверяем создание первого элемента
 TEST(TestForLab1, TestCreate) {
 	char a1[] = "dog";
 	list* first_element = create(a1);
@@ -11,6 +11,7 @@ TEST(TestForLab1, TestCreate) {
 	ASSERT_EQ(first_element -> value, a1);
 }
 
+// проверяем создание второго элемента 
 TEST(TestForLab1, TestAppend) {
 	char a1[] = "dog";
 	list* first_element = create (a1);
@@ -23,6 +24,7 @@ TEST(TestForLab1, TestAppend) {
 	ASSERT_EQ(second_element -> value, "cat");
 }
 
+// проверяем сортировку 
 TEST(TestForLab1, TestSort) {
 	char a1[] = "dog";
 	list* first_element = create(a1);
@@ -40,4 +42,24 @@ TEST(TestForLab1, TestSort) {
 	ASSERT_EQ(first_element->value, "cat");
 	ASSERT_EQ(second_element->value, "dog");
 	ASSERT_EQ(third_element->value, "lamb");
+}
+
+// проверяем сортировку, если первая/вторая буквы одинаковые 
+TEST(TestForLab1, TestCreatSortHard) {
+	char a1[] = "dog";
+	list* first_element = create(a1);
+
+	char a2[] = "durk";
+	list* second_element = append(a2, first_element);
+
+	char a3[] = "donkey";
+	list* third_element = append(a3, second_element);
+
+	sort(third_element);
+
+	ASSERT_EQ(nullptr, first_element->next);
+
+	ASSERT_EQ(first_element->value, "dog");
+	ASSERT_EQ(second_element->value, "donkey");
+	ASSERT_EQ(third_element->value, "durk");
 }
