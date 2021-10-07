@@ -1,65 +1,95 @@
 #include "pch.h"
 #include "lab_1.h"
 
-// проверяем создание первого элемента
 TEST(TestForLab1, TestCreate) {
-	char a1[] = "dog";
-	list* first_element = create(a1);
+	char a[] = "dog";
+	list* first_element = create(a);
 
 	ASSERT_NE(nullptr, first_element);
-	ASSERT_EQ(nullptr, first_element -> next);
-	ASSERT_EQ(first_element -> value, a1);
+	ASSERT_EQ(nullptr, first_element->next);
+	ASSERT_EQ(first_element->value, a);
 }
 
-// проверяем создание второго элемента 
+TEST(TestForLab1, TestCreate_nichego) {
+	char a[] = { NULL };
+	list* first_element = create(a);
+
+	ASSERT_NE(nullptr, first_element);
+	ASSERT_EQ(nullptr, first_element->next);
+	ASSERT_EQ(first_element->value, a);
+}
+
+TEST(TestForLab1, TestAppendPysto) {
+	struct list* pysto = (struct list*)malloc(sizeof(struct list*));
+	pysto->value = NULL;
+	pysto->next = NULL;
+
+
+	char a[] = "information";
+	list* new_element = append(a, NULL);
+
+	ASSERT_NE(nullptr, a);
+	ASSERT_EQ(NULL, new_element->next);
+	ASSERT_EQ(new_element->value, a);
+}
+
 TEST(TestForLab1, TestAppend) {
-	char a1[] = "dog";
-	list* first_element = create (a1);
+	struct list* animal = (struct list*)malloc(sizeof(struct list*));
+	list a = { "dog", NULL };
+	list b = { "durk", &a };
+	list c = { "donkey", &b };
+	list d = { "monkey", &c	};
+	list e = { "cat", &d };
 
-	char a2[] = "cat";
-	list* second_element = append (a2, first_element);
+	char f[] = "parrot";
+	list* new_element = append(f, &e);
 
-	ASSERT_NE(nullptr, second_element);
-	ASSERT_EQ(second_element -> next, first_element);
-	ASSERT_EQ(second_element -> value, "cat");
+	ASSERT_NE(nullptr, f);
+	ASSERT_EQ(&e,new_element->next);
+	ASSERT_EQ(new_element->value, f);
 }
 
-// проверяем сортировку 
+TEST(TestForLab1, TestAppend1) {
+	struct list* animal1 = (struct list*)malloc(sizeof(struct list*));
+	list a = { "dog", NULL };
+	list b = { "durk", &a };
+	list c = { "donkey", &b };
+	list d = { "monkey", &c };
+	list e = { "cat", &d };
+
+	char f[] = { NULL };
+	list* new_element = append(f, NULL);
+
+	ASSERT_NE(nullptr, f);
+	ASSERT_NE(&e, new_element->next);
+	ASSERT_EQ(new_element->value, f);
+}
+
 TEST(TestForLab1, TestSort) {
-	char a1[] = "dog";
-	list* first_element = create(a1);
+	struct list* animal2 = (struct list*)malloc(sizeof(struct list*));
+	list a = { "dog", NULL };
+	list b = { "durk", &a };
+	list c = { "donkey", &b };
+	list d = { "monkey", &c };
+	list e = { "cat", &d };
 
-	char a2[] = "cat";
-	list* second_element = append(a2, first_element);
+	sort(&e);
 
-	char a3[] = "lamb";
-	list* third_element = append(a3, second_element);
+	ASSERT_EQ(nullptr, &a);
 
-	sort(third_element);
-
-	ASSERT_EQ(nullptr, first_element->next);
-
-	ASSERT_EQ(first_element->value, "cat");
-	ASSERT_EQ(second_element->value, "dog");
-	ASSERT_EQ(third_element->value, "lamb");
+	ASSERT_EQ(a, "cat");
+	ASSERT_EQ(b, "dog");
+	ASSERT_EQ(c, "donkey");
+	ASSERT_EQ(d, "durk");
+	ASSERT_EQ(e, "monkey");
 }
 
-// проверяем сортировку, если первая/вторая буквы одинаковые 
-TEST(TestForLab1, TestCreatSortHard) {
-	char a1[] = "dog";
-	list* first_element = create(a1);
+TEST(TestForLab1, TestSort1) {
+	struct list* animal3 = (struct list*)malloc(sizeof(struct list*));
+	animal3->value = NULL;
+	animal3->next = NULL;
 
-	char a2[] = "durk";
-	list* second_element = append(a2, first_element);
+	sort(animal3);
 
-	char a3[] = "donkey";
-	list* third_element = append(a3, second_element);
-
-	sort(third_element);
-
-	ASSERT_EQ(nullptr, first_element->next);
-
-	ASSERT_EQ(first_element->value, "dog");
-	ASSERT_EQ(second_element->value, "donkey");
-	ASSERT_EQ(third_element->value, "durk");
+	ASSERT_EQ(nullptr, animal3);
 }
