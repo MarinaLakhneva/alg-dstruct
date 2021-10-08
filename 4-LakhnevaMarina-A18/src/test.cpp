@@ -1,5 +1,6 @@
 #include "pch.h"
-#include "lab_1.h"
+#include "Labaratornay/LaBa.h"
+
 
 TEST(TestForLab1, TestCreate) {
 	char a[] = "dog";
@@ -7,22 +8,22 @@ TEST(TestForLab1, TestCreate) {
 
 	ASSERT_NE(nullptr, first_element);
 	ASSERT_EQ(nullptr, first_element->next);
-	ASSERT_EQ(first_element->value, a);
+	ASSERT_STREQ(first_element->value, a);
 }
 
 TEST(TestForLab1, TestCreate_nichego) {
-	char a[] = { NULL };
+	char a[] = {NULL};
 	list* first_element = create(a);
 
 	ASSERT_NE(nullptr, first_element);
 	ASSERT_EQ(nullptr, first_element->next);
-	ASSERT_EQ(first_element->value, a);
+	ASSERT_STREQ(first_element->value, a);
 }
 
 TEST(TestForLab1, TestAppendPysto) {
-	struct list* pysto = (struct list*)malloc(sizeof(struct list*));
-	pysto->value = NULL;
-	pysto->next = NULL;
+	struct list* nothing = (struct list*)malloc(sizeof(struct list));
+	nothing->value = NULL;
+	nothing->next = NULL;
 
 
 	char a[] = "information";
@@ -30,66 +31,139 @@ TEST(TestForLab1, TestAppendPysto) {
 
 	ASSERT_NE(nullptr, a);
 	ASSERT_EQ(NULL, new_element->next);
-	ASSERT_EQ(new_element->value, a);
+	ASSERT_STREQ(new_element->value, a);
 }
 
 TEST(TestForLab1, TestAppend) {
-	struct list* animal = (struct list*)malloc(sizeof(struct list*));
-	list a = { "dog", NULL };
-	list b = { "durk", &a };
-	list c = { "donkey", &b };
-	list d = { "monkey", &c	};
-	list e = { "cat", &d };
+	list* a = (list*)malloc(sizeof(list));
+	a->value = ("dog");
+	a->next = NULL;
+
+	list* b = (list*)malloc(sizeof(list));
+	b->value = ("durk");
+	b->next = a;
+
+	list* c = (list*)malloc(sizeof(list));
+	c->value = ("donkey");
+	c->next = b;
+
+	list* d = (list*)malloc(sizeof(list));
+	d->value = ("monkey");
+	d->next = c;
+
+	list* e = (list*)malloc(sizeof(list));
+	e->value = "cat";
+	e->next = d;
 
 	char f[] = "parrot";
-	list* new_element = append(f, &e);
+	list* new_element = append(f, e);
 
 	ASSERT_NE(nullptr, f);
-	ASSERT_EQ(&e,new_element->next);
-	ASSERT_EQ(new_element->value, f);
+	ASSERT_EQ(e, new_element->next);
+	ASSERT_STREQ(new_element->value, f);
 }
 
 TEST(TestForLab1, TestAppend1) {
-	struct list* animal1 = (struct list*)malloc(sizeof(struct list*));
-	list a = { "dog", NULL };
-	list b = { "durk", &a };
-	list c = { "donkey", &b };
-	list d = { "monkey", &c };
-	list e = { "cat", &d };
+	list* a = (list*)malloc(sizeof(list));
+	a->value = ("dog");
+	a->next = NULL;
+
+	list* b = (list*)malloc(sizeof(list));
+	b->value = ("durk");
+	b->next = a;
+
+	list* c = (list*)malloc(sizeof(list));
+	c->value = ("donkey");
+	c->next = b;
+
+	list* d = (list*)malloc(sizeof(list));
+	d->value = ("monkey");
+	d->next = c;
+
+	list* e = (list*)malloc(sizeof(list));
+	e->value = ("cat");
+	e->next = d;
 
 	char f[] = { NULL };
 	list* new_element = append(f, NULL);
 
 	ASSERT_NE(nullptr, f);
-	ASSERT_NE(&e, new_element->next);
-	ASSERT_EQ(new_element->value, f);
+	ASSERT_NE(e, new_element->next);
+	ASSERT_STREQ(new_element->value, f);
 }
 
 TEST(TestForLab1, TestSort) {
-	struct list* animal2 = (struct list*)malloc(sizeof(struct list*));
-	list a = { "dog", NULL };
-	list b = { "durk", &a };
-	list c = { "donkey", &b };
-	list d = { "monkey", &c };
-	list e = { "cat", &d };
+	list* a = (list*)malloc(sizeof(list));
+	a->value = "dog";
+	a->next = NULL;
 
-	sort(&e);
+	list* b = (list*)malloc(sizeof(list));
+	b->value = "durk";
+	b->next = a;
 
-	ASSERT_EQ(nullptr, &a);
+	list* c = (list*)malloc(sizeof(list));
+	c->value = "donkey";
+	c->next = b;
 
-	ASSERT_EQ(a, "cat");
-	ASSERT_EQ(b, "dog");
-	ASSERT_EQ(c, "donkey");
-	ASSERT_EQ(d, "durk");
-	ASSERT_EQ(e, "monkey");
+	list* d = (list*)malloc(sizeof(list));
+	d->value = "monkey";
+	d->next = c;
+
+	list* e = (list*)malloc(sizeof(list));
+	e->value = "cat";
+	e->next = d;
+
+	sort(e);
+
+	ASSERT_EQ(nullptr, a->next);
+	
+	ASSERT_STREQ(a->value, "monkey");
+	ASSERT_STREQ(b->value, "durk");
+	ASSERT_STREQ(c->value, "donkey");
+	ASSERT_STREQ(d->value, "dog");
+	ASSERT_STREQ(e->value, "cat");
+
 }
 
 TEST(TestForLab1, TestSort1) {
-	struct list* animal3 = (struct list*)malloc(sizeof(struct list*));
+	list* a = (list*)malloc(sizeof(list));
+	a->value = "monkey";
+	a->next = NULL;
+
+	list* b = (list*)malloc(sizeof(list));
+	b->value = "durk";
+	b->next = a;
+
+	list* c = (list*)malloc(sizeof(list));
+	c->value = "donkey";
+	c->next = b;
+
+	list* d = (list*)malloc(sizeof(list));
+	d->value = "dog";
+	d->next = c;
+
+	list* e = (list*)malloc(sizeof(list));
+	e->value = "cat";
+	e->next = d;
+
+	sort(e);
+
+	ASSERT_EQ(nullptr, a->next);
+
+	ASSERT_STREQ(a->value, "monkey");
+	ASSERT_STREQ(b->value, "durk");
+	ASSERT_STREQ(c->value, "donkey");
+	ASSERT_STREQ(d->value, "dog");
+	ASSERT_STREQ(e->value, "cat");
+
+}
+
+TEST(TestForLab1, TestSort2) {
+	struct list* animal3 = (struct list*)malloc(sizeof(struct list));
 	animal3->value = NULL;
 	animal3->next = NULL;
 
 	sort(animal3);
 
-	ASSERT_EQ(nullptr, animal3);
+	ASSERT_EQ(nullptr, animal3->value);
 }

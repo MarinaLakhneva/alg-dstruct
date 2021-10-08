@@ -10,12 +10,12 @@ typedef struct list {
 list* create(const char* word) {
     list* tmp = (list*)malloc(sizeof(list));
     if (tmp == NULL) {
-        printf("No memory allocated!"); 
+        printf("No memory allocated!");
         return 0;
     }
-            tmp->value = word;
-            tmp->next = NULL;
-            return(tmp); 
+    tmp->value = word;
+    tmp->next = NULL;
+    return(tmp);
 }
 
 list* append(const char* word, list* head) {
@@ -24,9 +24,9 @@ list* append(const char* word, list* head) {
         printf("No memory allocated!");
         return 0;
     }
-            tmp->value = word;
-            tmp->next = head;
-            return(tmp);
+    tmp->value = word;
+    tmp->next = head;
+    return(tmp);
 }
 
 void print(list* fin) {
