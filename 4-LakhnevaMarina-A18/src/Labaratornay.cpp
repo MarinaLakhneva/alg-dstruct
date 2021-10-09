@@ -3,30 +3,15 @@
 
 int main() {
 
-	list* a = (list*)malloc(sizeof(list));
-	a->value = ("dog");
-	a->next = NULL;
+	list list_e = { "dog", NULL };
+	list list_d = { "durk", &list_e };
+	list list_c = { "donkey", &list_d };
+	list list_b = { "monkey", &list_c };
+	list list_a = { "cat", &list_b };
+    print(&list_a);
+    sort(&list_a);
 
-	list* b = (list*)malloc(sizeof(list));
-	b->value = ("durk");
-	b->next = a;
-
-	list* c = (list*)malloc(sizeof(list));
-	c->value = ("donkey");
-	c->next = b;
-
-	list* d = (list*)malloc(sizeof(list));
-	d->value = ("monkey");
-	d->next = c;
-
-	list* e = (list*)malloc(sizeof(list));
-	e->value = ("cat");
-	e->next = d;
-
-    print(e);
-    sort(e);
-
-    printf("\n");
-    print(e);
+    printf("----\n");
+    print(&list_a);
     return 0;
 }
