@@ -102,9 +102,7 @@ extern "C" {
         if (current_node->prev_node != NULL) {
             if (current_node->prev_node->is_free == 1) {
                 node_for_merge = current_node->prev_node;
-                if (node_for_merge->next_node != NULL) {
-                    node_for_merge->size = node_for_merge->size + sizeof(Node) + node_for_merge->next_node->size;
-                }
+                node_for_merge->size = node_for_merge->size + sizeof(Node) + node_for_merge->next_node->size;
                 if (node_for_merge->next_node->next_node != NULL) {
                     node_for_merge->next_node->next_node->prev_node = node_for_merge;
                     node_for_merge->next_node = node_for_merge->next_node->next_node;
@@ -121,9 +119,6 @@ extern "C" {
         Node* current_node = first_node;
         int general_size = 0;
         while (current_node != NULL) {
-            //            if (current_node->is_free == false) {
-            //                printf("memory leak at address %p, size %d\n", (char*)current_node + sizeof(Node), current_node->size);
-            //            }
             general_size += current_node->size + sizeof(Node);
             current_node = current_node->next_node;
         }
