@@ -70,7 +70,7 @@ extern "C" {
             new_node->prev_node = current_node;
             current_node->next_node = new_node;
             new_node->is_free = 1; // пустой 
-            current_node->size = size; // записываем память, которая могла оказаться чуть больше запрашиваемой 
+            current_node->size = size; // записываем запрашиваемую уже без куска лишней памяти 
         }
         current_node->is_free = 0; // занят 
 
