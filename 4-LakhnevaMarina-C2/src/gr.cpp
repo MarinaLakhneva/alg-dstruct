@@ -12,6 +12,11 @@ typedef struct node {
 node* head_node(int vert1, int vert2) { // создаем голову
     node* new_node = (node*)malloc(sizeof(node));
     
+    if (new_node == NULL) {
+        printf("No memory allocated!");
+        return 0;
+    }
+    
     new_node->next = NULL;
     new_node->vert1 = vert1;
     new_node->vert2 = vert2;
@@ -19,8 +24,14 @@ node* head_node(int vert1, int vert2) { // создаем голову
     return new_node;
 }
 
-void add_node(int vert1, int vert2, node* first_node) { // добиваем список 
+int add_node(int vert1, int vert2, node* first_node) { // добиваем список 
     node* new_node = (node*)malloc(sizeof(node));
+    
+    if (new_node == NULL) {
+        printf("No memory allocated!");
+        return 0;
+    }
+
     node* next = first_node->next;
 
     new_node->vert1 = vert1;
@@ -78,7 +89,7 @@ void dfs(int start_vert, node* first_node, int* visited) {
         return;
     visited[start_vert] = 1;
 
-    printf(" %d", start_vert);
+    //printf(" %d", start_vert);
     int free_verts = free_connected_verts(first_node, start_vert, visited);
 
     while (free_verts--) {
@@ -88,6 +99,31 @@ void dfs(int start_vert, node* first_node, int* visited) {
     }
 }
 
+double stress_test__time(int num_verts) {
+    int* visited = (int*)malloc(num_verts * sizeof(int));
+    
+    if (visited == NULL) {
+        printf("No memory allocated!");
+        return 0;
+    }
+
+    node* first_node = head_node(0, 0);
+
+    for (int i = 0; i < num_verts; i++) {
+        for (int j = 0; j < num_verts; j++) {
+            add_node(i, j, first_node);
+        }
+    }
+    unsigned long time_start = clock();
+
+    dfs(0, first_node, visited);
+
+    double total_time = (double)(clock() - time_start) / CLOCKS_PER_SEC;
+    printf("%f", total_time);
+
+    return total_time;
+}
+
 int main() {
   
     int size_of_graph;
@@ -95,10 +131,14 @@ int main() {
     
     int* visited = (int*)malloc(size_of_graph * sizeof(int));
     
+    if (visited == NULL) {
+        printf("No memory allocated!");
+        return 0;
+    }
+
     int vert1, vert2;
     scanf("%d %d", &vert1, &vert2);
     node* first_node = head_node(vert1, vert2);
-
 
     char buffer[100];
     bool n = false; // не дает завершить цикл на первой итерации 
@@ -117,5 +157,6 @@ int main() {
     for (int i = 0; i < size_of_graph; i++) visited[i] = 0;
     dfs(0, first_node, visited);
 
+    //stress_test__time(2000);    //total_time = 231 sec 
     return 0;
 }
