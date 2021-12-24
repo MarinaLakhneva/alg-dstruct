@@ -75,6 +75,11 @@ int sum(int  U, int B, int K) {
     if ((total_sum_of_set >= K) && total_weight_of_set <= B) {
 
         answer = (int*)malloc(sizeof(int) * (U + 1));
+        if (answer == NULL) {
+            printf("No memory allocated!");
+            return 0;
+        }
+
         for (int i = 1; i <= U; i++)
             answer[i - 1] = i;
         number_in_answer = U;
@@ -106,7 +111,13 @@ int sum(int  U, int B, int K) {
 
     if (flag == -1) {
         number_in_answer = 0;
+
         answer = (int*)malloc(sizeof(int) * U);
+        if (answer == NULL) {
+            printf("No memory allocated!");
+            return 0;
+        }
+
         for (int i = 0; i < U; i++) {
             if (weights[i] > 0) {
                 answer[number_in_answer++] = i + 1;
@@ -120,11 +131,79 @@ int sum(int  U, int B, int K) {
     return 0;
 }
 
-
 void free_globals() {
     free(weights);
     free(prices);
     number_in_answer = 0;
+}
+
+int summary(int  U, int B, int K) {
+    total_sum_of_set = 0;
+    total_weight_of_set = 0;
+    int min_weight = 100000;
+
+    for (int i = 0; i < U; i++) {
+        total_sum_of_set += prices[i];
+        total_weight_of_set += weights[i];
+        if (min_weight > weights[i])
+            min_weight = weights[i];
+    }
+
+    if ((total_sum_of_set >= K) && total_weight_of_set <= B) {
+        FILE* values;
+
+        char name[] = "output.txt";
+        values = fopen(name, "w");
+        for (int i = 1; i <= U; i++)
+            fprintf(values, "%d ", i);
+
+        fclose(values);
+    }
+
+    if (min_weight > B || total_sum_of_set < K) {
+        char name[] = "output.txt";
+        FILE* values = fopen(name, "w");
+        fprintf(values, "%d ", 0);
+
+        fclose(values);
+    }
+
+    int cur_weight = total_weight_of_set;
+    int cur_sum = total_sum_of_set;
+    int flag = 1;
+
+    while (flag != -1 && flag != -2) {
+        int min_price_id = get_min(prices);
+        cur_weight -= weights[min_price_id];
+        cur_sum -= prices[min_price_id];
+        weights[min_price_id] = 0;
+        prices[min_price_id] = 0;
+
+        if (cur_weight - B <= 0) {
+            flag = -2;
+            if (cur_sum >= K) {
+                flag = -1;
+            }
+        }
+    }
+
+    if (flag == -1) {
+        char name[] = "output.txt";
+        FILE* values = fopen(name, "w");
+        for (int i = 0; i < U; i++) {
+            if (weights[i] > 0)
+                fprintf(values, "%d ", i + 1);
+        }
+        fclose(values);
+        return 0;
+    }
+    else if (flag == -2) {
+        char name[] = "output.txt";
+        FILE* values = fopen(name, "w");
+        fprintf(values, "%d ", 0);
+        fclose(values);
+    }
+    return 1;
 }
 
 int* tests_results;
@@ -169,7 +248,13 @@ int test(char input[])
             }
             tests_results[cnt] = 1;
             if (sum(U, B, K)) {
+
                 ethalon = (int*)malloc(sizeof(int) * (U + 1));
+                if (ethalon == NULL) {
+                    printf("No memory allocated!");
+                    return 0;
+                }
+
                 for (int i = 0; i < number_in_answer; i++) {
                     fscanf(test, "%d ", &ethalon[i]);
                     if (ethalon[i] != answer[i]) {
@@ -197,18 +282,19 @@ int test(char input[])
     return -1;
 }
 
-
-
 int main() {
-    char file_name[] = "test_D.txt";
-    if (test(file_name) == 1) {
-        for (int i = 0; i < number_of_tests; i++) {
-            if (tests_results[i])
-                printf("Test number %d is passed successfully\n", i + 1);
-            else
-                printf("Test number %d is failed\n", i + 1);
-        }
-        free(tests_results);
-    }
-    return 0;
+    //char file_name[] = "test_D.txt";
+    //if (test(file_name) == 1) {
+    //    for (int i = 0; i < number_of_tests; i++) {
+    //        if (tests_results[i])
+    //            printf("Test number %d is passed successfully\n", i + 1);
+    //        else
+    //            printf("Test number %d is failed\n", i + 1);
+    //    }
+    //    free(tests_results);
+    //}
+    //return 0;
+
+    read_ints("input.txt");
+    summary(U, B, K);
 }
