@@ -10,7 +10,7 @@ typedef struct Treap {
 	struct Treap* right;
 } Treap;
 
-typedef struct PairTreap { // для удобства пара деревьев(расщепление, слияние, ?удаление)
+typedef struct PairTreap {
 	struct Treap* right;
 	struct Treap* left;
 } PairTreap;
@@ -52,37 +52,26 @@ Treap* Merge(Treap* tree1, Treap* tree2) { // функция слияния
 	}
 }
 
-PairTreap Splitting(Treap* tree, int key) { // функция расщепления
+PairTreap Split(Treap* tree, int key) { // функция расщепления
 	if (tree == NULL) {
 		PairTreap nullTreap = { NULL, NULL };
 		return nullTreap;
 	}
 	else if (key > tree->key) {
-		PairTreap tmpPair = Splitting(tree->right, key);
+		PairTreap tmpPair = Split(tree->right, key);
 		tree->right = tmpPair.right;
 		PairTreap newTreap = { tree, tmpPair.left };
 		return newTreap;
 	}
 	else {
-		PairTreap tmpPair = Splitting(tree->left, key);
+		PairTreap tmpPair = Split(tree->left, key);
 		tree->left = tmpPair.left;
 		PairTreap newTreap = { tmpPair.right, tree };
 		return newTreap;
 	}
 }
 
-Treap* Delete(Treap* tree, int key) {
-	if (Find(tree, key) == NULL)
-		return tree;
-
-	PairTreap newPair = Splitting(tree, key);
-	PairTreap newTree = Splitting(newPair.left, key + 1);
-
-	free(newTree.right);
-	return Merge(newPair.right, newTree.left);
-}
-
-Treap* Add(Treap* tree, int key, int value) { // функция добавления
+Treap* Insert(Treap* tree, int key, int value) { // функция добавления
 	if (Find(tree, key) != NULL) {
 		return tree;
 	}
@@ -102,10 +91,22 @@ Treap* Add(Treap* tree, int key, int value) { // функция добавлен
 	newTree->right = NULL;
 	newTree->left = NULL;
 
-	PairTreap newPair = Splitting(tree, key);
-	newPair.right = Merge(newPair.right, newTree); 
+	PairTreap newPair = Split(tree, key);
+	newPair.right = Merge(newPair.right, newTree);
 
-	return Merge(newPair.right, newPair.left); 
+	return Merge(newPair.right, newPair.left);
+}
+
+Treap* Delete(Treap* tree, int key) {
+	if (Find(tree, key) == NULL)
+		return tree;
+
+	PairTreap newPair = Split(tree, key);
+	PairTreap newTree = Split(newPair.left, key + 1);
+
+	free(newTree.right);
+
+	return Merge(newPair.right, newTree.left);
 }
 
 void Vacant(Treap* tree) {
@@ -122,12 +123,11 @@ int main(void) {
 	int value;
 
 	Treap* tree = NULL;
-	
-	while (1){
-		while (scanf("%c %i", &command, &value)) {
+
+		while (fscanf(stdin, "%c %i", &command, &value) > 0) {
 			switch (command) {
 			case 'a':
-				tree = Add(tree, value, rand());
+				tree = Insert(tree, value, rand());
 				break;
 			case 'r':
 				tree = Delete(tree, value);
@@ -140,7 +140,6 @@ int main(void) {
 				break;
 			}
 		}
-	}
 	Vacant(tree);
 	return 0;
 }
